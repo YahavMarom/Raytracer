@@ -1,6 +1,7 @@
 #ifndef TUPLE_H
 #define TUPLE_H
 
+#include <iostream>
 
 class Tuple 
 {
@@ -42,6 +43,7 @@ Tuple cross(const Tuple& a, const Tuple& b);
 Tuple point(double x, double y, double z);
 Tuple vector(double x, double y, double z);
 
+std::ostream& operator<<(std::ostream& os, const Tuple& t);
 
 
 

@@ -1,7 +1,5 @@
 #include <cassert>
 #include <cmath>
-#include <iostream>
-
 #include "Tuple.h"
 #include "Constants.h"
 
@@ -11,7 +9,7 @@ Tuple::Tuple(double x, double y, double z, double w)
     , m_z {z}
     , m_w {w}
     {
-        assert( (m_w == 0 || m_w == 1) );
+        assert( (m_w == 0.0 || m_w == 1.0) );
     }
 
 bool Tuple::isPoint() const {
@@ -107,5 +105,9 @@ Tuple point(double x, double y, double z) {
 Tuple vector(double x, double y, double z) {
     return Tuple(x, y, z, 0);
 }
-
+std::ostream& operator<<(std::ostream& os, const Tuple& t) 
+{
+    os << "(" << t.getX() << ", " << t.getY() << ", " << t.getZ() << ", " << t.getW() << ")";
+    return os;
+}
 
