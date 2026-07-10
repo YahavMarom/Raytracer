@@ -1,0 +1,8 @@
+# Compiled binaries
+Tuple
+
+# macOS Debug Symbols
+*.dSYM/
+
+# IDE configurations
+.vscode/

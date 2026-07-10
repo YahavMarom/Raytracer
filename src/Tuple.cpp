@@ -99,6 +99,7 @@ Tuple cross(const Tuple& a, const Tuple& b) {
 
 }
 
+
 Tuple point(double x, double y, double z) {
     return Tuple(x, y, z, 1);
 }
