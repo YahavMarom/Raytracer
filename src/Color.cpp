@@ -5,11 +5,7 @@ Color::Color(double red, double green, double blue)
     : m_red {red}
     , m_green {green}
     , m_blue {blue}
-    {
-    assert( (m_red >= 0 & m_red <= 1)
-            & (m_green >= 0 & m_green <= 1)
-            & (m_blue >= 0 & m_blue <= 1));
-    }
+    {}
 
 Color operator+(const Color& a, const Color& b) {
     return Color(

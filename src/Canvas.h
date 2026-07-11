@@ -19,8 +19,8 @@ public:
     int getWidth() const {return m_width; }
     int getHeight() const {return m_height; }
 
-    void writePixel(int row, int col, const Color& color);
-    Color pixelAt(int row, int col) const;
+    void writePixel(int x, int y, const Color& color);
+    Color pixelAt(int x, int y) const;
 
 
 };
