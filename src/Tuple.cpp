@@ -1,7 +1,8 @@
-#include <cassert>
-#include <cmath>
 #include "Tuple.h"
 #include "Constants.h"
+#include <cassert>
+#include <cmath>
+
 
 Tuple::Tuple(double x, double y, double z, double w)
     : m_x {x}

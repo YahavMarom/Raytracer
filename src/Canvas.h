@@ -1,9 +1,10 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include <iostream>
-#include <vector>
+
 #include "Color.h"
+#include <vector>
+#include <iostream>
 
 
 class Canvas {
