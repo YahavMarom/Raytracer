@@ -18,4 +18,11 @@ const Tuple& Ray::getDirection() const {
 Tuple Ray::getPosition(double time) const{
     return m_origin + m_direction * time;
 
+
+}
+
+std::ostream& operator<<(std::ostream& os, const Ray& r) 
+{
+    os << "Origin: " << r.getOrigin() << "\n" << "Direction: " << r.getDirection();
+    return os;
 }

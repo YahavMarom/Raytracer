@@ -20,5 +20,6 @@ public:
 
 };
 
+std::ostream& operator<<(std::ostream& os, const Ray& r);
 
 #endif

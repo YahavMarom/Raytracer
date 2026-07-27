@@ -1,5 +1,6 @@
 #include "Intersections.h"
 #include "Constants.h"
+#include "Transformations.h"
 #include <cmath>
 #include <algorithm>
 
@@ -12,10 +13,12 @@ Intersection intersection(double t, const Sphere& s) {
 
 // computes the intersections of sphere and ray, and if there are points, sets the data structure Intersection for both.
 std::vector<Intersection> intersect(const Sphere& s, const Ray& r) {
-    Tuple sphere_to_ray = r.getOrigin() - point(0.0, 0.0, 0.0);
+    Ray transformed_ray = transform(r, s.getTransform().inverse());
 
-    double a = dot(r.getDirection(), r.getDirection());
-    double b = 2.0 * dot(r.getDirection(), sphere_to_ray);
+    Tuple sphere_to_ray = transformed_ray.getOrigin() - point(0.0, 0.0, 0.0);
+
+    double a = dot(transformed_ray.getDirection(), transformed_ray.getDirection());
+    double b = 2.0 * dot(transformed_ray.getDirection(), sphere_to_ray);
     double c = dot(sphere_to_ray, sphere_to_ray) - 1.0;
 
     double discriminant = b * b - 4.0 * a * c;
