@@ -1,6 +1,7 @@
 #include "Color.h"
 #include "cassert"
 
+
 Color::Color(double red, double green, double blue)
     : m_red {red}
     , m_green {green}
@@ -41,4 +42,14 @@ Color operator*(const Color& a, const Color& b) {
         a.getGreen() * b.getGreen(),
         a.getBlue() * b.getBlue()
     );
+}
+
+std::ostream& operator<<(std::ostream& os, const Color& c) {
+
+    os << "Red: " << c.getRed() << "\n";
+    os << "Green: " << c.getGreen() << "\n";
+    os << "Blue: " << c.getBlue() << "\n";
+
+    return os;
+
 }

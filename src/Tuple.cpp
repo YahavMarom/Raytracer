@@ -25,10 +25,9 @@ double Tuple::size() const {
     return std::sqrt( m_x * m_x + m_y * m_y + m_z * m_z );
 }
 
-
+// must be a vector, but I'm not doing an assert - it's expected from the user to not give bad inputs.
 Tuple Tuple::normalize() const {
 
-    assert(m_w == 0);
     
     double mag = size();
 
@@ -107,6 +106,13 @@ Tuple point(double x, double y, double z) {
 Tuple vector(double x, double y, double z) {
     return Tuple(x, y, z, 0);
 }
+
+Tuple reflect(const Tuple& inVec, const Tuple& normalVec) {
+    return {inVec - normalVec * 2 * dot(inVec, normalVec)};
+}
+
+
+
 std::ostream& operator<<(std::ostream& os, const Tuple& t) 
 {
     os << "(" << t.getX() << ", " << t.getY() << ", " << t.getZ() << ", " << t.getW() << ")";

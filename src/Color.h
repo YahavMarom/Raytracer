@@ -1,6 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include <iostream>
 
 class Color {
 private:
@@ -26,6 +27,7 @@ Color operator*(const double scalar, const Color& c);
 Color operator*(const Color& c, const double scalar);
 Color operator*(const Color& a, const Color& b);
 
+std::ostream& operator<<(std::ostream& os, const Color& c); 
 
 
 #endif

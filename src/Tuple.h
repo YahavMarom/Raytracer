@@ -31,6 +31,7 @@ public:
 
 Tuple operator+(const Tuple& a, const Tuple& b);
 Tuple operator-(const Tuple& a, const Tuple& b);
+Tuple operator-(const Tuple& a);
 Tuple operator*(const Tuple& t, const double scalar);
 Tuple operator*(const double scalar, const Tuple& t);
 Tuple operator/(const Tuple& t, const double scalar);
@@ -42,6 +43,8 @@ Tuple cross(const Tuple& a, const Tuple& b);
 
 Tuple point(double x, double y, double z);
 Tuple vector(double x, double y, double z);
+
+Tuple reflect(const Tuple& inVec, const Tuple& normalVec);
 
 std::ostream& operator<<(std::ostream& os, const Tuple& t);
 
