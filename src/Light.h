@@ -9,8 +9,8 @@ struct pointLight {
     Color intensity;
     
 
-    pointLight( const Tuple& t, const Color& c)
-    : position {t}
+    pointLight( const Tuple& pos, const Color& c)
+    : position {pos}
     , intensity {c}
     {}
 };

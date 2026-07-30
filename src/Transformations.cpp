@@ -1,6 +1,6 @@
 #include "Transformations.h"
 
-
+// when doing translation * point, we add point_x + translation_x, same for all cords 
 Matrix translation(double x, double y, double z) {
     return Matrix(
         1, 0, 0, x,
@@ -10,6 +10,7 @@ Matrix translation(double x, double y, double z) {
     );
 }
 
+// multiply each coordinate
 Matrix scaling(double x, double y, double z) {
     return Matrix(
         x, 0, 0, 0,
@@ -19,7 +20,7 @@ Matrix scaling(double x, double y, double z) {
     );
 }
 
-
+// rorate around the x axis by radions
 Matrix rotation_x(double radians) {
     return Matrix(
         1, 0, 0, 0, 
@@ -46,7 +47,12 @@ Matrix rotation_z(double radians) {
         0, 0, 0, 1
     );
 }
-
+/*
+Scenario: A shearing transformation moves x in proportion to y
+Given transform ← shearing(1, 0, 0, 0, 0, 0)
+And p ← point(2, 3, 4)
+Then transform * p = point(5, 3, 4)
+*/
 Matrix shearing(double x_y, double x_z, double y_x, double y_z, double z_x, double z_y){
     return Matrix(
         1, x_y, x_z, 0,
@@ -66,3 +72,17 @@ Ray transform(const Ray& r, const Matrix& m) {
 }
 
 
+Matrix viewTransform(const Tuple& from, const Tuple& to, const Tuple& up) {
+    Tuple forward  { (to - from).normalize() };
+    Tuple left { cross( forward, up.normalize() ) };
+    Tuple trueUp {cross(left, forward)};
+
+    Matrix OrientedMatrix (
+        left.getX(), left.getY(), left.getZ(), 0,
+        trueUp.getX(), trueUp.getY(), trueUp.getZ(), 0,
+        -forward.getX(), -forward.getY(), -forward.getZ(), 0,
+        0, 0, 0, 1
+    );
+
+    return OrientedMatrix * translation(-from.getX(), -from.getY(), -from.getZ());
+}

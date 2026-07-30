@@ -1,12 +1,13 @@
 #include "Intersections.h"
 #include "Constants.h"
+#include "World.h"
 #include "Transformations.h"
 #include <cmath>
 #include <algorithm>
 
 
 // returns data struct "Intersection" when using this func
-Intersection intersection(double t, const Sphere& s) {
+Intersection getIntersect(double t, const Sphere& s) {
     return Intersection{t, &s};
 }
 
@@ -35,7 +36,7 @@ std::vector<Intersection> intersect(const Sphere& s, const Ray& r) {
         std::swap(t1, t2);
         }
 
-        return { intersection(t1, s), intersection(t2, s) };
+        return { getIntersect(t1, s), getIntersect(t2, s) };
     }
 }
 
@@ -54,11 +55,26 @@ std::vector<Intersection> intersections(std::initializer_list<Intersection> list
 }
 
 // returns the lowest non-negative.
-std::optional<Intersection> hit(std::vector<Intersection>& xs) {
+std::optional<Intersection> hit(const std::vector<Intersection>& xs) {
     for (const auto& i : xs) {
         if (i.t >= 0) {
             return i;
         }
     }
     return std::nullopt;
+}
+
+
+
+Comp prepareComputations(const Intersection& I, const Ray& ray) {
+    Tuple pos {ray.getPosition(I.t)};
+    Comp res {I.t, I.object, pos, -ray.getDirection(), normalAt(*(I.object), pos), false};
+
+    if (dot(res.normVec, res.eyeVec) < 0.0) {
+        res.inside = true;
+        res.normVec = -res.normVec;
+    }
+
+    return res;
+    
 }

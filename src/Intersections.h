@@ -15,12 +15,26 @@ struct Intersection {
     const Sphere* object;
 };
 
+struct Comp {
+    double t;
+    const Sphere* object;
+    Tuple point;
+    Tuple eyeVec;
+    Tuple normVec;
+    bool inside;
+};
 
-Intersection intersection(double t, const Sphere& s);
+
+Intersection getIntersect(double t, const Sphere& s);
 
 std::vector<Intersection> intersect(const Sphere& s, const Ray& r);
 
 std::vector<Intersection> intersections(std::initializer_list<Intersection> list);
 
-std::optional<Intersection> hit(std::vector<Intersection>& xs);
+std::optional<Intersection> hit(const std::vector<Intersection>& xs);
+
+Comp prepareComputations(const Intersection& I, const Ray& ray);
+
+
+
 #endif

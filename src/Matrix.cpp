@@ -157,17 +157,16 @@ Tuple operator*(const Matrix& a, const Tuple& t) {
     double x = a(0, 0) * t.getX() + a(0, 1) * t.getY() + a(0, 2) * t.getZ() + a(0, 3) * t.getW();
     double y = a(1, 0) * t.getX() + a(1, 1) * t.getY() + a(1, 2) * t.getZ() + a(1, 3) * t.getW();
     double z = a(2, 0) * t.getX() + a(2, 1) * t.getY() + a(2, 2) * t.getZ() + a(2, 3) * t.getW();
-    double w = a(3, 0) * t.getX() + a(3, 1) * t.getY() + a(3, 2) * t.getZ() + a(3, 3) * t.getW();
+    
 
-    return Tuple(x, y, z, w);
+    return Tuple(x, y, z, t.getW());
 }
 Tuple operator*(const Tuple& t, const Matrix& a) {
     double x = t.getX() * a(0, 0) + t.getY() * a(1, 0) + t.getZ() * a(2, 0) + t.getW() * a(3, 0);
     double y = t.getX() * a(0, 1) + t.getY() * a(1, 1) + t.getZ() * a(2, 1) + t.getW() * a(3, 1);
     double z = t.getX() * a(0, 2) + t.getY() * a(1, 2) + t.getZ() * a(2, 2) + t.getW() * a(3, 2);
-    double w = t.getX() * a(0, 3) + t.getY() * a(1, 3) + t.getZ() * a(2, 3) + t.getW() * a(3, 3);
-
-    return Tuple(x, y, z, w);
+   
+    return Tuple(x, y, z, t.getW());
 }
 
 

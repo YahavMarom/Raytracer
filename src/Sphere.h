@@ -3,6 +3,8 @@
 
 #include "Matrix.h"
 #include "Materials.h"
+#include "Color.h"
+
 #include <iostream>
 
 class Sphere {
@@ -15,7 +17,7 @@ private:
 
 
 public:
-    Sphere();
+    Sphere(const Color& c= Color(1,1,1), double ambient=0.1, double diffuse=0.9, double specular=0.9, double shininess=200);
     int getID() const;
     void setTransform(const Matrix& t);
     const Matrix& getTransform() const;

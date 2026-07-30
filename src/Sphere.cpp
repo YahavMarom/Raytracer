@@ -3,11 +3,15 @@
 
 int Sphere::m_nextId {0};
 
-Sphere::Sphere()
-    : m_id {m_nextId++}
-    {
+Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess)
+        : m_id {m_nextId++}
+        , m_materials {c, ambient, diffuse, specular, shininess}
+        
 
-    }
+        {
+
+        }
+
 int Sphere::getID() const {
     return m_id;
 }

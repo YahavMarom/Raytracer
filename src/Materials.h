@@ -31,8 +31,6 @@ public:
 };
 
 
-bool operator==(const Materials& a, const Materials& b);
-
 Color lighting(const Materials& m, const pointLight& light, const Tuple& position,
                 const Tuple& eyeVec, const Tuple& normalVec);
 

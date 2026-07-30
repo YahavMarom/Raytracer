@@ -15,5 +15,5 @@ Matrix shearing(double x_y, double x_z, double y_x, double y_z, double z_x, doub
 
 Ray transform(const Ray& r, const Matrix& m);
 
-
+Matrix viewTransform(const Tuple& from, const Tuple& to, const Tuple& up);
 #endif
