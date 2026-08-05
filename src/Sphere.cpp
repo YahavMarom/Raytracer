@@ -1,49 +1,42 @@
 #include "Sphere.h"
 
-
-int Sphere::m_nextId {0};
-
-Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess)
-        : m_id {m_nextId++}
-        , m_materials {c, ambient, diffuse, specular, shininess}
-        
-
-        {
-
-        }
-
-int Sphere::getID() const {
-    return m_id;
+Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess) 
+    : Shape(Materials(c, ambient, diffuse, specular, shininess)) 
+{
 }
 
-const Matrix& Sphere::getTransform() const {
-    return m_transform;
+#include "Sphere.h"
+#include <cmath>
+#include <algorithm>
+
+std::vector<Intersection> Sphere::localIntersect(const Ray& localRay) const {
+    Tuple sphere_to_ray = localRay.getOrigin() - point(0.0, 0.0, 0.0);
+
+    double a = dot(localRay.getDirection(), localRay.getDirection());
+    double b = 2.0 * dot(localRay.getDirection(), sphere_to_ray);
+    double c = dot(sphere_to_ray, sphere_to_ray) - 1.0;
+
+    double discriminant = b * b - 4.0 * a * c;
+
+    if (discriminant < 0.0) {
+        return {};
+    }
+
+    double sqrt_d = std::sqrt(discriminant);
+    double t1 = (-b - sqrt_d) / (2.0 * a);
+    double t2 = (-b + sqrt_d) / (2.0 * a);
+
+    if (t1 > t2) {
+        std::swap(t1, t2);
+    }
+
+    return { Intersection{t1, this}, Intersection{t2, this} };
 }
 
-void Sphere::setTransform(const Matrix& t) {
-    m_transform = t;
-}
-
-bool operator==(const Sphere& a, const Sphere& b) {
-    return (a.getID() == b.getID());
-}
-
-Tuple normalAt(const Sphere& s, const Tuple& worldPoint) {
-    Tuple objectPoint {s.getTransform().inverse() * worldPoint };
+Tuple Sphere::localNormalAt(const Tuple& localPoint) const {
+    Tuple objectPoint {getTransform().inverse() * localPoint };
     Tuple objectNormal {objectPoint - point(0,0,0)};
-    Tuple worldNormal  {(s.getTransform().inverse().transpose()) * objectNormal};
+    Tuple worldNormal  {(getTransform().inverse().transpose()) * objectNormal};
+    worldNormal.setW(0.0);
     return worldNormal.normalize();
-
 }
-
-const Materials& Sphere::getMaterials() const {
-    return m_materials;
-}
-
-Materials& Sphere::getMaterials() {
-    return m_materials;
-} 
-void Sphere::setMaterials(const Materials& m) {
-    m_materials = m;
-}
-

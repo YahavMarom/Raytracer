@@ -32,7 +32,7 @@ public:
 
 
 Color lighting(const Materials& m, const pointLight& light, const Tuple& position,
-                const Tuple& eyeVec, const Tuple& normalVec);
+                const Tuple& eyeVec, const Tuple& normalVec, bool isShadowed);
 
 
 #endif

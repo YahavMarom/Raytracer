@@ -12,11 +12,15 @@ Materials::Materials(const Color& c, double ambient, double diffuse, double spec
     }
 
 Color lighting(const Materials& m, const pointLight& light, const Tuple& position,
-                const Tuple& eyeVec, const Tuple& normalVec) {
+                const Tuple& eyeVec, const Tuple& normalVec, bool isShadowed) {
                     Color effective_color {m.getColor() * light.intensity};
-                    Tuple lightVec { (light.position - position).normalize() };
                     Color ambient = effective_color * m.getAmbient();
 
+                    if (isShadowed) {
+                        return ambient;
+                    }
+                    
+                    Tuple lightVec { (light.position - position).normalize() };
                     Color diffuse(0,0,0);
                     Color specular(0,0,0);
                     

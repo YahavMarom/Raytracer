@@ -44,7 +44,6 @@ bool operator==(const Matrix& a, const Matrix& b);
 
 Matrix operator*(const Matrix& a, const Matrix& b);
 Tuple operator*(const Matrix& a, const Tuple& t);
-Tuple operator*(const Tuple& t, const Matrix& a);
 
 std::ostream& operator<<(std::ostream& os, const Matrix& M);
 

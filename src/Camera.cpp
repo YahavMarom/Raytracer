@@ -47,7 +47,7 @@ Canvas Camera::render(const World& world) const {
     for (int y = 0; y < m_vsize; y++) {
         for (int x = 0; x < m_hsize; x++) {
             const Ray r {rayForPixel(x, y)};
-            Color c {color_at(world, r)};
+            Color c {colorAt(world, r)};
             canvas.writePixel(x, y, c);
         }
     }

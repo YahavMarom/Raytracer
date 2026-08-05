@@ -10,7 +10,6 @@ Tuple::Tuple(double x, double y, double z, double w)
     , m_z {z}
     , m_w {w}
     {
-        assert( (m_w == 0.0 || m_w == 1.0) );
     }
 
 bool Tuple::isPoint() const {

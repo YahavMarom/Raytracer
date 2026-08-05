@@ -26,6 +26,7 @@ public:
     double size() const;
     Tuple normalize() const;
 
+    void setW(double w) {m_w = w;}
 
 };
 
