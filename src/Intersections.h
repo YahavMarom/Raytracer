@@ -21,6 +21,7 @@ struct Comp {
     Tuple normVec;
     bool inside;
     Tuple overPoint;
+    Tuple reflectVec;
 };
 
 Intersection getIntersect(double t, const Shape& s);

@@ -31,13 +31,15 @@ std::optional<Intersection> hit(const std::vector<Intersection>& xs) {
 
 Comp prepareComputations(const Intersection& I, const Ray& ray) {
     Tuple pos {ray.getPosition(I.t)};
-    Comp res {I.t, I.object, pos, -ray.getDirection(), I.object->normalAt(pos), false, pos};
+    Comp res {I.t, I.object, pos, -ray.getDirection(), I.object->normalAt(pos), false, pos, vector(0, 0, 0)};
 
     if (dot(res.normVec, res.eyeVec) < 0.0) {
         res.inside = true;
         res.normVec = -res.normVec;
     }
     res.overPoint = res.point + res.normVec * EPSILON;
+    res.reflectVec = reflect(ray.getDirection(), res.normVec);
+
 
     return res;
 }

@@ -1,13 +1,10 @@
 #include "Sphere.h"
 
-Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess) 
-    : Shape(Materials(c, ambient, diffuse, specular, shininess)) 
+Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity) 
+    : Shape(Materials(c, ambient, diffuse, specular, shininess, reflectivity)) 
 {
 }
 
-#include "Sphere.h"
-#include <cmath>
-#include <algorithm>
 
 std::vector<Intersection> Sphere::localIntersect(const Ray& localRay) const {
     Tuple sphere_to_ray = localRay.getOrigin() - point(0.0, 0.0, 0.0);
@@ -34,9 +31,5 @@ std::vector<Intersection> Sphere::localIntersect(const Ray& localRay) const {
 }
 
 Tuple Sphere::localNormalAt(const Tuple& localPoint) const {
-    Tuple objectPoint {getTransform().inverse() * localPoint };
-    Tuple objectNormal {objectPoint - point(0,0,0)};
-    Tuple worldNormal  {(getTransform().inverse().transpose()) * objectNormal};
-    worldNormal.setW(0.0);
-    return worldNormal.normalize();
+    return localPoint - point(0.0, 0.0, 0.0);
 }

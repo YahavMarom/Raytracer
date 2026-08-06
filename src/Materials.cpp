@@ -1,20 +1,25 @@
 #include "Materials.h"
 #include "Tuple.h"
 
-Materials::Materials(const Color& c, double ambient, double diffuse, double specular, double shininess)
+Materials::Materials(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity)
     : m_color {c}
     , m_ambient {ambient}
     , m_diffuse {diffuse}
     , m_specular {specular}
     , m_shininess {shininess}
+    , m_reflectivity {reflectivity}
     {
 
     }
 
-Color lighting(const Materials& m, const pointLight& light, const Tuple& position,
+Color lighting(const Materials& m, const Shape& s, const pointLight& light, const Tuple& position,
                 const Tuple& eyeVec, const Tuple& normalVec, bool isShadowed) {
-                    Color effective_color {m.getColor() * light.intensity};
-                    Color ambient = effective_color * m.getAmbient();
+
+                    
+                    Color effectiveColor = m.hasPattern() ? m.getPattern()->patternAtShape(s, position) : m.getColor();
+                    effectiveColor= effectiveColor * light.intensity;
+                    
+                    Color ambient = effectiveColor * m.getAmbient();
 
                     if (isShadowed) {
                         return ambient;
@@ -26,7 +31,7 @@ Color lighting(const Materials& m, const pointLight& light, const Tuple& positio
                     
                     double light_dot_normal {dot(lightVec, normalVec)};
                     if (light_dot_normal >= 0) {
-                        diffuse = effective_color * m.getDiffuse() * light_dot_normal;
+                        diffuse = effectiveColor * m.getDiffuse() * light_dot_normal;
 
                         Tuple reflectVec {reflect(-lightVec, normalVec)};
                         double reflect_dot_eye {dot(reflectVec, eyeVec)};
@@ -40,3 +45,4 @@ Color lighting(const Materials& m, const pointLight& light, const Tuple& positio
                     return ambient + diffuse + specular;
 
                 }
+            

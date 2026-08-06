@@ -1,5 +1,4 @@
 #include "Canvas.h"
-#include <iostream>
 
 Canvas::Canvas(int width, int height)
     : m_width {width}

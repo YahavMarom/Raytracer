@@ -1,5 +1,5 @@
 #include "Color.h"
-#include "cassert"
+#include "Constants.h"
 
 
 Color::Color(double red, double green, double blue)
@@ -43,6 +43,14 @@ Color operator*(const Color& a, const Color& b) {
         a.getBlue() * b.getBlue()
     );
 }
+
+bool operator==(const Color& a, const Color& b) {
+    Color c {a - b};
+    return std::abs(c.getRed()) < EPSILON &&
+           std::abs(c.getGreen()) < EPSILON &&
+           std::abs(c.getBlue()) < EPSILON;
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Color& c) {
 

@@ -60,7 +60,7 @@ bool isShadowed(const World& w, const Tuple& p) {
 
 Color shadeHit(const World& w, const Comp& comp) {
     bool shadow {isShadowed(w, comp.overPoint)};
-    return lighting(comp.object->getMaterials(), w.getLight(), comp.point, comp.eyeVec, comp.normVec, shadow);
+    return lighting(comp.object->getMaterials(), *(comp.object), w.getLight(), comp.point, comp.eyeVec, comp.normVec, shadow);
 }
 
 Color colorAt(const World& w, const Ray& ray) {

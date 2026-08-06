@@ -1,7 +1,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <string>
 #include "PPM.h"
 
 void writePPM(const Canvas& canvas, const std::string& filename) {

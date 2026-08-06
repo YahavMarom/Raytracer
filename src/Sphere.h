@@ -7,8 +7,14 @@
 class Sphere : public Shape {
 public:
     // Only the signature is declared in the header
-    Sphere(const Color& c = Color(1, 1, 1), double ambient = 0.1, double diffuse = 0.9, double specular = 0.9, double shininess = 200.0);
-    
+    Sphere(const Color& c = Color(1, 1, 1), 
+           double ambient = 0.1, 
+           double diffuse = 0.9, 
+           double specular = 0.9, 
+           double shininess = 200.0, 
+           double reflectivity = 0.0);
+
+           
     ~Sphere() override = default;
 
     std::vector<Intersection> localIntersect(const Ray& localRay) const override;

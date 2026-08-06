@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "Canvas.h"
 
 #include <cmath>
 
