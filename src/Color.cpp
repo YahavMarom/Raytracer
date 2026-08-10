@@ -1,6 +1,8 @@
 #include "Color.h"
 #include "Constants.h"
 
+const Color Color::Black{0.0, 0.0, 0.0};
+const Color Color::White{1.0, 1.0, 1.0};
 
 Color::Color(double red, double green, double blue)
     : m_red {red}

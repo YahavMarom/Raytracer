@@ -21,7 +21,7 @@ public:
            double m20, double m21, double m22, double m23,
            double m30, double m31, double m32, double m33);
     
-    static Matrix identity();
+    static const Matrix Identity;
 
     double& operator()(int row, int col);
     const double& operator()(int row, int col) const;

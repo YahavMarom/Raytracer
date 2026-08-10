@@ -1,5 +1,6 @@
 #include "World.h"
 #include "Sphere.h"
+#include "Constants.h"
 #include "Transformations.h"
 #include <algorithm>
 
@@ -58,19 +59,70 @@ bool isShadowed(const World& w, const Tuple& p) {
     return false;
 }
 
-Color shadeHit(const World& w, const Comp& comp) {
+Color shadeHit(const World& w, const Comp& comp, int remaining) {
     bool shadow {isShadowed(w, comp.overPoint)};
-    return lighting(comp.object->getMaterials(), *(comp.object), w.getLight(), comp.point, comp.eyeVec, comp.normVec, shadow);
-}
+    const Materials& mat = comp.object->getMaterials();
+    
+    Color surface {lighting(mat, *(comp.object), w.getLight(), comp.point, comp.eyeVec, comp.normVec, shadow)};
+    Color reflected {reflectedColor(w, comp, remaining)};
+    Color refracted { refractedColor(w, comp, remaining)};
 
-Color colorAt(const World& w, const Ray& ray) {
+    if (mat.getTransparancy() > 0.0 && mat.getReflectivity() > 0.0) {
+        double reflectance {schlick(comp)};
+        return surface + reflected * reflectance + refracted * (1.0 - reflectance);
+    }
+    return surface + reflected + refracted;
+}   
+
+
+Color colorAt(const World& w, const Ray& ray, int remaining) {
     auto world_intersections {intersect_world(w, ray)};
     auto xs {hit(world_intersections)};
     if (xs.has_value()) {
-        Comp comp {prepareComputations(*xs, ray)};
-        return shadeHit(w, comp);
+        Comp comp {prepareComputations(*xs, ray, world_intersections)};
+        return shadeHit(w, comp, remaining);
     }
     else {
-        return Color(0,0,0);
+        return Color::Black;
     }
+}
+
+
+
+Color reflectedColor(const World& w, const Comp& computations, int remaining) {
+    if (remaining <= 0) {
+        return Color::Black;
+    }
+    double t {computations.object->getMaterials().getReflectivity()};
+    if (t < EPSILON) {
+        return Color::Black;
+    }
+
+    Ray reflectedRay {Ray(computations.overPoint, computations.reflectVec)};
+    Color c {colorAt(w, reflectedRay, remaining - 1)};
+
+    return c * t;
+
+}
+
+Color refractedColor(const World& w, const Comp& computations, int remaining) {
+    if (computations.object->getMaterials().getTransparancy() < EPSILON || remaining <= 0) {
+        return Color::Black;
+    }
+    double n_ratio { computations.n1 / computations.n2 };
+    double cos_i { dot(computations.eyeVec, computations.normVec) };
+
+    double sin2_t { n_ratio * n_ratio * (1.0 - cos_i * cos_i) };
+
+    if (sin2_t > 1.0) {
+        return Color::Black;
+    }
+
+    double cos_t { std::sqrt(1.0 - sin2_t) };
+    Tuple direction { computations.normVec * (n_ratio * cos_i - cos_t) - computations.eyeVec * n_ratio };
+
+    Ray refractRay { computations.underPoint, direction };
+
+    Color color { colorAt(w, refractRay, remaining - 1) };
+    return color * computations.object->getMaterials().getTransparancy();
 }

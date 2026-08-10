@@ -37,7 +37,8 @@ World defaultWorld();
 std::vector<Intersection> intersect_world(const World& world, const Ray& ray);
 
 bool isShadowed(const World& w, const Tuple& p);
-Color shadeHit(const World& w, const Comp& comps);
-Color colorAt(const World& w, const Ray& ray);
-
+Color shadeHit(const World& w, const Comp& comps, int remaining = 5);
+Color colorAt(const World& w, const Ray& ray, int remaining);
+Color reflectedColor(const World& w, const Comp& computations, int remaining = 5);
+Color refractedColor(const World& w, const Comp& computations, int remaining = 5);
 #endif

@@ -1,13 +1,16 @@
 #include "Materials.h"
 #include "Tuple.h"
 
-Materials::Materials(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity)
+Materials::Materials(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity,
+double transparency, double reflectiveIndex)
     : m_color {c}
     , m_ambient {ambient}
     , m_diffuse {diffuse}
     , m_specular {specular}
     , m_shininess {shininess}
     , m_reflectivity {reflectivity}
+    , m_transparency {transparency}
+    , m_reflectiveIndex {reflectiveIndex}
     {
 
     }

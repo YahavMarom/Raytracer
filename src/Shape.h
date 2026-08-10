@@ -11,9 +11,9 @@
 class Shape {
 
 protected: 
-    Matrix m_transform {Matrix::identity()};
-    Matrix m_inverseTransform{Matrix::identity()};
-    Matrix m_inverseTranspose{Matrix::identity()};
+    Matrix m_transform {Matrix::Identity};
+    Matrix m_inverseTransform{Matrix::Identity};
+    Matrix m_inverseTranspose{Matrix::Identity};
 
     Materials m_materials{};
 

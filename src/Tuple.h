@@ -13,6 +13,7 @@ private:
 
 
 public:
+    Tuple() = default;
     Tuple(double x, double y, double z, double w);
     
     double getX() const { return m_x; }

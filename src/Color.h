@@ -17,6 +17,9 @@ public:
     double getBlue() const {return m_blue; }
 
 
+    static const Color Black;
+    static const Color White;
+
 };
 
 

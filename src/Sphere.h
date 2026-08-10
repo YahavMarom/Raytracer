@@ -12,7 +12,9 @@ public:
            double diffuse = 0.9, 
            double specular = 0.9, 
            double shininess = 200.0, 
-           double reflectivity = 0.0);
+           double reflectivity = 0.0,
+           double transparency = 0.0,
+           double reflectiveIndex = 1.0);
 
            
     ~Sphere() override = default;

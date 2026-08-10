@@ -4,6 +4,12 @@
 #include <cmath>
 
 
+const Matrix Matrix::Identity{
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0
+};
 
 Matrix::Matrix()
     {
@@ -21,14 +27,7 @@ Matrix::Matrix(double m00, double m01, double m02, double m03,
 {
 }
 
-Matrix Matrix::identity() {
-    return Matrix(
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    );
-}
+
 
 
 double& Matrix::operator()(int row, int col) {

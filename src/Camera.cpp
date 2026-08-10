@@ -40,13 +40,15 @@ Ray Camera::rayForPixel(int px, int py) const{
 
 }
 
+
+// at colorAt, 5 is the recursion depth limit. 
 Canvas Camera::render(const World& world) const {
     Canvas canvas(m_hsize, m_vsize); 
 
     for (int y = 0; y < m_vsize; y++) {
         for (int x = 0; x < m_hsize; x++) {
             const Ray r {rayForPixel(x, y)};
-            Color c {colorAt(world, r)};
+            Color c {colorAt(world, r, 5)};
             canvas.writePixel(x, y, c);
         }
     }

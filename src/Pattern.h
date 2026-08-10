@@ -13,10 +13,10 @@ class Shape;
 class Pattern {
 
 protected:
-    Color m_firstColor {Color(0, 0, 0)};
-    Color m_secondColor {Color(1, 1, 1)};
-    Matrix m_transform {Matrix::identity()};
-    Matrix m_inverseTransform{Matrix::identity()};
+    Color m_firstColor {Color::Black};
+    Color m_secondColor {Color::White};
+    Matrix m_transform {Matrix::Identity};
+    Matrix m_inverseTransform{Matrix::Identity};
 
 
 

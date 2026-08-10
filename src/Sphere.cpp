@@ -1,7 +1,11 @@
 #include "Sphere.h"
 
-Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity) 
-    : Shape(Materials(c, ambient, diffuse, specular, shininess, reflectivity)) 
+Sphere::Sphere(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity,
+                double transparency, double reflectiveIndex) 
+    : Shape(
+                Materials(c, ambient, diffuse, specular, shininess,
+                        reflectivity, transparency, reflectiveIndex)
+            ) 
 {
 }
 

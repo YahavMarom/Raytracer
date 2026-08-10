@@ -11,7 +11,7 @@ private:
     int m_hsize;
     int m_vsize;
     double m_fieldOfView;
-    Matrix m_transform{Matrix::identity()}; 
+    Matrix m_transform{Matrix::Identity}; 
 
     double m_halfWidth;
     double m_halfHeight;
