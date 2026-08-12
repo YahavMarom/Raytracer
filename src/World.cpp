@@ -44,8 +44,8 @@ std::vector<Intersection> intersect_world(const World& w, const Ray& ray) {
     return world_intersections;
 }
 
-bool isShadowed(const World& w, const Tuple& p) {
-    Tuple v {w.getLight().position - p};
+bool isShadowed(const World& w, const Tuple& p, const pointLight& light) {
+    Tuple v {light.position - p};
     double distance {v.size()};
     Tuple direction {v.normalize()};
 
@@ -60,10 +60,14 @@ bool isShadowed(const World& w, const Tuple& p) {
 }
 
 Color shadeHit(const World& w, const Comp& comp, int remaining) {
-    bool shadow {isShadowed(w, comp.overPoint)};
     const Materials& mat = comp.object->getMaterials();
+    Color surface(0, 0, 0);
+
+    for (const auto& light : w.getLights()) {
+        bool shadow {isShadowed(w, comp.overPoint, light)};
+        surface = surface + lighting(mat, *(comp.object), light, comp.point, comp.eyeVec, comp.normVec, shadow);
+    }
     
-    Color surface {lighting(mat, *(comp.object), w.getLight(), comp.point, comp.eyeVec, comp.normVec, shadow)};
     Color reflected {reflectedColor(w, comp, remaining)};
     Color refracted { refractedColor(w, comp, remaining)};
 

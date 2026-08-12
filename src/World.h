@@ -11,7 +11,7 @@
 class World {
 private:
     std::vector<std::shared_ptr<Shape>> m_objects {}; 
-    pointLight m_light{point(-10, 10, -10), Color(1, 1, 1)}; 
+    std::vector<pointLight> m_lights {};
   
 public:
     World() = default;
@@ -24,19 +24,27 @@ public:
         return m_objects;
     }
 
+
+    void addLight(const pointLight& PL) {
+        m_lights.push_back(PL);
+    }
+
+    const std::vector<pointLight>& getLights() const {
+        return m_lights;
+    }
+
     void setLight(const pointLight& PL) {
-        m_light = PL;
+        m_lights.clear();
+        m_lights.push_back(PL);
     }
-    const pointLight& getLight() const {
-        return m_light;
-    }
+ 
 };
 
 World defaultWorld();
 
 std::vector<Intersection> intersect_world(const World& world, const Ray& ray);
 
-bool isShadowed(const World& w, const Tuple& p);
+bool isShadowed(const World& w, const Tuple& p, const pointLight& light);
 Color shadeHit(const World& w, const Comp& comps, int remaining = 5);
 Color colorAt(const World& w, const Ray& ray, int remaining);
 Color reflectedColor(const World& w, const Comp& computations, int remaining = 5);

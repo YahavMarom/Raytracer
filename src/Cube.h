@@ -1,15 +1,17 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef CUBE_H
+#define CUBE_H
+
 
 #include "Shape.h"
 #include "Color.h"
+#include <array>
 
+// unit cube - the cube [-1, 1] ^ 3
 
-// unit sphere - origin at (0, 0, 0) and radius is 1
-class Sphere : public Shape {
+class Cube : public Shape {
 public:
     // Only the signature is declared in the header
-    Sphere(const Color& c = Color(1, 1, 1), 
+    Cube(const Color& c = Color(1, 1, 1), 
            double ambient = 0.1, 
            double diffuse = 0.9, 
            double specular = 0.9, 
@@ -19,10 +21,13 @@ public:
            double reflectiveIndex = 1.0);
 
            
-    ~Sphere() override = default;
+    ~Cube() override = default;
 
+
+    std::array<double, 2> checkAxis(double cordRayOrigin, double cordRayDirection) const;
     std::vector<Intersection> localIntersect(const Ray& localRay) const override;
     Tuple localNormalAt(const Tuple& localPoint) const override;
+    
 };
 
 #endif
