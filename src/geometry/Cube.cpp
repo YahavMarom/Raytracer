@@ -1,6 +1,8 @@
 #include "Cube.h"
 #include "Constants.h"
 #include <algorithm>
+
+      
 Cube::Cube(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity,
                 double transparency, double reflectiveIndex)
             : Shape(

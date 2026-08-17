@@ -35,6 +35,7 @@ public:
     
     Ray rayForPixel(int px, int py) const;
     Canvas render(const World& world) const;
+    Canvas renderMultiThreads(const World& world, int numThreads) const;
 };
 
 #endif
