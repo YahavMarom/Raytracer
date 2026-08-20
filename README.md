@@ -8,6 +8,8 @@ I built this to go past just implementing ray-object intersection math and actua
 
 The project also doubles as a small case study in multi-threading and spatial acceleration structures — see [Benchmarks](#benchmarks) below.
 
+![Rendered scene](assets/scene.png)
+
 ## Built With
 
 - **C++ (C++17)** - Core engine, no external dependencies
@@ -167,11 +169,118 @@ Canvas image = camera.renderMultiThreads(w, 0);      // 0 = auto-detect core cou
 writePPM(image, "scene.ppm");
 ```
 
-Open the resulting `.ppm` with most image viewers, or convert it:
+Open the resulting `.ppm` with most image viewers, or convert it to PNG (e.g. for embedding in a README or sharing) — on macOS:
+
+```bash
+sips -s format png scene.ppm --out scene.png
+```
+
+or with ImageMagick on Linux:
 
 ```bash
 convert scene.ppm scene.png
 ```
+
+## An Example
+
+Here's a full scene — a table, floor, and two patterned walls, plus a small character built out of dozens of transformed primitives grouped into a single hierarchy — assembled and rendered end-to-end:
+
+```cpp
+#include "Camera.h"
+#include "Sphere.h"
+#include "Cube.h"
+#include "Plane.h"
+#include "Group.h"
+#include "PPM.h"
+
+int main2() {
+    World w;
+
+    // Lights
+    w.addLight(pointLight(point(-5.0, 8.0, -5.0), Color(0.8, 0.8, 0.8)));
+    w.addLight(pointLight(point(6.0, 6.0, -6.0), Color(0.5, 0.5, 0.5)));
+
+    // Camera
+    Camera camera(5000, 2500, PI / 3.0);
+    camera.setTransform(viewTransform(
+        point(8.5, 3.5, -9.0),
+        point(0.0, -0.5, 0.0),
+        vector(0.0, 1.0, 0.0)
+    ));
+
+    // Table (grouped: top + 4 legs)
+    auto tableGroup = std::make_shared<Group>();
+
+    auto tableTop = std::make_shared<Cube>();
+    tableTop->setTransform(translation(0.0, -0.1, 0.0) * scaling(4.0, 0.1, 2.5));
+    tableTop->getMaterials().setColor(Color(0.55, 0.35, 0.2));
+    tableTop->getMaterials().setReflectivity(0.15);
+    tableTop->getMaterials().setSpecular(0.3);
+    tableGroup->addChild(tableTop);
+
+    auto addLeg = [&](double x, double z) {
+        auto leg = std::make_shared<Cube>();
+        leg->setTransform(translation(x, -1.7, z) * scaling(0.1, 1.5, 0.1));
+        leg->getMaterials().setColor(Color(0.55, 0.35, 0.2));
+        tableGroup->addChild(leg);
+    };
+    addLeg(-3.7, -2.2);
+    addLeg( 3.7, -2.2);
+    addLeg(-3.7,  2.2);
+    addLeg( 3.7,  2.2);
+
+    w.addObject(tableGroup);
+
+    // Floor & walls, each with a procedural pattern
+    auto floor = std::make_shared<Plane>();
+    floor->setTransform(translation(0.0, -3.2, 0.0));
+    auto floorPattern = std::make_shared<Checker3DPattern>(Color(0.25, 0.25, 0.25), Color(0.75, 0.75, 0.75));
+    floor->getMaterials().setPattern(floorPattern);
+    w.addObject(floor);
+
+    auto leftWall = std::make_shared<Plane>();
+    leftWall->setTransform(translation(-8.0, 0.0, 0.0) * rotation_z(-PI / 2.0));
+    auto leftWallPattern = std::make_shared<StripePattern>(Color(0.43, 0.3, 0.22), Color(0.64, 0.48, 0.31));
+    leftWallPattern->setTransform(rotation_y(PI / 2.0) * scaling(0.5, 1, 1));
+    leftWall->getMaterials().setPattern(leftWallPattern);
+    w.addObject(leftWall);
+
+    auto rightWall = std::make_shared<Plane>();
+    rightWall->setTransform(translation(0.0, 0.0, 8.0) * rotation_x(PI / 2.0));
+    auto rightWallPattern = std::make_shared<StripePattern>(Color(0.43, 0.3, 0.22), Color(0.64, 0.48, 0.31));
+    rightWallPattern->setTransform(scaling(0.5, 1, 1));
+    rightWall->getMaterials().setPattern(rightWallPattern);
+    w.addObject(rightWall);
+
+    // A character built from many small transformed primitives, all under one group
+    auto characterGroup = std::make_shared<Group>();
+    characterGroup->setTransform(translation(0.5, 0.0, 0.0) * rotation_y(-PI / 18.0) * rotation_x(PI / 36.0));
+
+    auto brownPants = std::make_shared<Cube>();
+    brownPants->setTransform(translation(0.0, 0.08, 0.0) * scaling(0.40, 0.08, 0.25));
+    brownPants->getMaterials().setColor(Color(0.729, 0.443, 0.235));
+    characterGroup->addChild(brownPants);
+
+    auto yellowBody = std::make_shared<Cube>();
+    yellowBody->setTransform(translation(0.0, 0.61, 0.0) * scaling(0.42, 0.35, 0.27));
+    yellowBody->getMaterials().setColor(Color(0.992, 0.953, 0.098));
+    characterGroup->addChild(yellowBody);
+
+    // ...(eyes, pores, tie, socks, shoes, etc. — same pattern of
+    // creating a shape, transforming it, coloring it, and adding it
+    // to the group)
+
+    w.addObject(characterGroup);
+
+    // Render
+    Canvas image = camera.renderMultiThreads(w, 0);
+    writePPM(image, "scene.ppm");
+
+    return 0;
+}
+```
+
+This example shows the two levels `Group` is useful at: `tableGroup` batches a handful of simple shapes for the BVH culling benefit, while `characterGroup` batches dozens of tiny primitives *and* gives them a single shared transform, so posing or moving the whole character only means changing one `setTransform` call.
 
 ## Benchmarks
 
