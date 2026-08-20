@@ -188,22 +188,3 @@ The project includes a built-in benchmark comparing flat vs. grouped scene graph
 | 500 | 17277 ms | 3654 ms (4.7x) | 3820 ms (4.5x) | 459 ms (37.6x) |
 
 **Takeaway:** grouping and multi-threading compound — bounding boxes cut how many objects each ray needs to test, and threading spreads the remaining work across cores, together reaching up to ~40x over the naive single-threaded baseline.
-
-## Future Improvements
-
-- Replace the flat `Group` bounding check with a real BVH (median-split or SAH) for sub-linear scaling as object counts grow further
-- Texture mapping / UV-based image patterns, beyond the current procedural ones
-- Anti-aliasing via supersampling, and soft shadows from area lights
-- A simple external scene description format (JSON/YAML) instead of hard-coding scenes in C++
-
-## Lessons Learned
-
-This project pushed me past "does the math work" into "does it perform," which turned out to be a different problem: adding bounding volumes and threading meant thinking about spatial locality and work distribution, not just intersection formulas. It was a good hands-on introduction to:
-- Recursive algorithms with a bounded depth (reflection/refraction)
-- Spatial acceleration structures and why they matter as scene complexity grows
-- `std::thread`-based parallelism and measuring its real-world payoff
-- Matrix-based transform composition for a full 3D scene graph
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
