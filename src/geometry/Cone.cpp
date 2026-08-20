@@ -1,8 +1,8 @@
-#include "Cylinder.h"
+#include "Cone.h"
 
 
 
-Cylinder::Cylinder(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity,
+Cone::Cone(const Color& c, double ambient, double diffuse, double specular, double shininess, double reflectivity,
                 double transparency, double reflectiveIndex) 
     : Shape(
                 Materials(c, ambient, diffuse, specular, shininess,
@@ -12,14 +12,14 @@ Cylinder::Cylinder(const Color& c, double ambient, double diffuse, double specul
 {
 }
 
-bool Cylinder::checkCap(const Ray& ray, double t) const{
+bool Cone::checkCap(const Ray& ray, double t) const{
     double x {ray.getPosition(t).getX()};
     double z {ray.getPosition(t).getZ()};
 
     return (x * x + z * z <= 1.0);
 }
 
-void Cylinder::intersectCaps(const Ray& ray, std::vector<Intersection>& xs) const{
+void Cone::intersectCaps(const Ray& ray, std::vector<Intersection>& xs) const{
     if (!m_closed || std::abs(ray.getDirection().getY()) < EPSILON) {
         return;
     }
@@ -30,6 +30,7 @@ void Cylinder::intersectCaps(const Ray& ray, std::vector<Intersection>& xs) cons
         xs.push_back(getIntersect(t, *this));
     }
 
+    // with upper end cap
     t = (getMax() - ray.getOrigin().getY() ) / ray.getDirection().getY() ;
     if (checkCap(ray, t)) {
         xs.push_back(getIntersect(t, *this));
@@ -39,25 +40,49 @@ void Cylinder::intersectCaps(const Ray& ray, std::vector<Intersection>& xs) cons
 }
 
 
-std::vector<Intersection> Cylinder::localIntersect(const Ray& localRay) const { 
-    double a {std::pow(localRay.getDirection().getX(), 2) + std::pow(localRay.getDirection().getZ(), 2) };
+std::vector<Intersection> Cone::localIntersect(const Ray& localRay) const { 
+
+    double a {std::pow(localRay.getDirection().getX(), 2) -
+            std::pow(localRay.getDirection().getY(), 2) +
+                std::pow(localRay.getDirection().getZ(), 2) };
+
+    double b {2 * (localRay.getOrigin().getX() * localRay.getDirection().getX() -
+                    localRay.getOrigin().getY() * localRay.getDirection().getY() +
+                   localRay.getOrigin().getZ() * localRay.getDirection().getZ() )
+            };
+
+    double c {std::pow(localRay.getOrigin().getX(), 2) -
+            std::pow(localRay.getOrigin().getY(), 2) +
+            std::pow(localRay.getOrigin().getZ(), 2)  };
+
     std::vector<Intersection> xs = {};
 
     if (std::abs(a) < EPSILON) {
+        if (std::abs(b) > EPSILON) {
+            
+            double t {- c / (2.0 * b) };
+            double y {localRay.getPosition(t).getY()};
+            if (m_min < y && y < m_max){
+                xs.push_back(getIntersect(t, *this));
+            }
+
+        }
         intersectCaps(localRay, xs);
         return xs;
+        
+    
     }
 
-    double b {2 * (localRay.getOrigin().getX() * localRay.getDirection().getX() + 
-                   localRay.getOrigin().getZ() * localRay.getDirection().getZ() )
-            };
-    double c {std::pow(localRay.getOrigin().getX(), 2) + std::pow(localRay.getOrigin().getZ(), 2) - 1.0  };
+
+    
 
     double disc {b * b - 4.0 * a * c};
 
     if (disc < 0.0) {
-        return {};
+        intersectCaps(localRay, xs);
+        return xs;
     }
+
     double t0 {(-b - std::sqrt(disc)) / (2.0 * a)};
     double t1 {(-b + std::sqrt(disc)) / (2.0 * a)};
     if (t0 > t1) {
@@ -83,21 +108,28 @@ std::vector<Intersection> Cylinder::localIntersect(const Ray& localRay) const {
 
 }
 
-Tuple Cylinder::localNormalAt(const Tuple& localPoint) const {
+Tuple Cone::localNormalAt(const Tuple& localPoint) const {
     double dist {localPoint.getX() * localPoint.getX() + localPoint.getZ() * localPoint.getZ()  };
 
-    if (dist < 1.0 && localPoint.getY() >= m_max - EPSILON) {
+   if (dist < (m_max * m_max) && localPoint.getY() >= m_max - EPSILON) {
         return vector(0, 1, 0);
     }
 
-    if (dist < 1.0 && localPoint.getY() <= m_min + EPSILON) {
+    if (dist < (m_min * m_min) && localPoint.getY() <= m_min + EPSILON) {
         return vector(0, -1, 0);
     }
-    return vector(localPoint.getX(), 0.0, localPoint.getZ() ) ;
+
+    double y {std::sqrt(dist)};
+    if (localPoint.getY() > 0.0) {
+        y = -y;
+    }
+
+    return vector(localPoint.getX(), y, localPoint.getZ());
 
 }
 
-Bounds Cylinder::bounds() const {
+
+Bounds Cone::bounds() const {
     double maxDist = std::max(std::abs(m_min), std::abs(m_max));
     return Bounds(point(-maxDist, m_min, -maxDist), point(maxDist, m_max, maxDist));
 }

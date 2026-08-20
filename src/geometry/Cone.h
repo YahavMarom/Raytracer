@@ -1,13 +1,14 @@
-#ifndef CYLINDER_H
-#define CYLINDER_H
+#ifndef CONE_H
+#define CONE_H
 
 
 #include "Shape.h"
 #include "Color.h"
 #include "Constants.h"
 
-// cylinder - radius is 1, the unit circle on xz, extends infinitely in -+y
-class Cylinder : public Shape {
+// double cone, extends infinitely in -+y. 
+// x^2 + z^2 = y^2
+class Cone : public Shape {
 
 private:
     double m_min {-INF};
@@ -17,7 +18,7 @@ public:
     // Only the signature is declared in the header
 
 
-    Cylinder(const Color& c = Color(1, 1, 1), 
+    Cone(const Color& c = Color(1, 1, 1), 
            double ambient = 0.1, 
            double diffuse = 0.9, 
            double specular = 0.9, 
@@ -27,7 +28,7 @@ public:
            double reflectiveIndex = 1.0);
 
            
-    ~Cylinder() override = default;
+    ~Cone() override = default;
 
     double getMin() const {return m_min;}
     double getMax() const {return m_max;}

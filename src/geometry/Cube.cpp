@@ -76,3 +76,8 @@ Tuple Cube::localNormalAt(const Tuple& localPoint) const {
     }
     return vector(0, 0, localPoint.getZ());
 }
+
+
+Bounds Cube::bounds() const {
+    return Bounds(point(-1, -1, -1), point(1, 1, 1));
+}

@@ -38,3 +38,8 @@ std::vector<Intersection> Sphere::localIntersect(const Ray& localRay) const {
 Tuple Sphere::localNormalAt(const Tuple& localPoint) const {
     return localPoint - point(0.0, 0.0, 0.0);
 }
+
+
+Bounds Sphere::bounds() const {
+    return Bounds(point(-1, -1, -1), point(1, 1, 1));
+}

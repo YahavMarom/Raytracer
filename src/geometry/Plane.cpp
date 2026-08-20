@@ -18,3 +18,7 @@ Tuple Plane::localNormalAt(const Tuple& p) const {
     return vector(0.0, 1.0, 0.0);
     
 }
+
+Bounds Plane::bounds() const {
+    return Bounds(point(-INF, 0, -INF), point(INF, 0, INF));
+}

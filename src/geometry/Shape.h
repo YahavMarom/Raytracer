@@ -6,6 +6,7 @@
 #include "Ray.h"
 #include "Intersections.h"
 #include "Transformations.h"
+#include "Bounds.h"
 #include <vector>
 
 class Shape {
@@ -16,6 +17,8 @@ protected:
     Matrix m_inverseTranspose{Matrix::Identity};
 
     Materials m_materials{};
+
+    const Shape* m_parent {nullptr};
 
 
     Shape() = default;
@@ -38,13 +41,22 @@ public:
     const Materials& getMaterials() const {return m_materials;}
     Materials& getMaterials() {return m_materials;}
 
-    std::vector<Intersection> intersect(const Ray& r) const;
+    void setParent(const Shape* parent) { m_parent = parent; }
+    const Shape* getParent() const { return m_parent; }
+
+    Tuple worldToObject(const Tuple& worldPoint) const;
+    Tuple normalToWorld(const Tuple& localNormal) const;
     Tuple normalAt(const Tuple& worldPoint) const;
+    
+    std::vector<Intersection> intersect(const Ray& r) const;
+    
 
     
     virtual std::vector<Intersection> localIntersect(const Ray& localRay) const = 0;
     virtual Tuple localNormalAt(const Tuple& localPoint) const = 0;
 
+    virtual Bounds bounds() const = 0;
+    Bounds parentSpaceBounds() const { return bounds().transform(m_transform); }
 
 };
 

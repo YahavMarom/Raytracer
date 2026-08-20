@@ -11,13 +11,34 @@ std::vector<Intersection> Shape::intersect(const Ray& worldRay) const {
     return localIntersect(localRay);
 }
 
-Tuple Shape::normalAt(const Tuple& worldPoint) const {
-    const Tuple objectPoint{ m_inverseTransform * worldPoint };
-    const Tuple objectNormal{ localNormalAt(objectPoint) };
+Tuple Shape::worldToObject(const Tuple& worldPoint) const {
+    Tuple point {worldPoint};
 
-    Tuple worldNormal{ m_inverseTranspose * objectNormal };
-    worldNormal.setW(0.0);
-    return worldNormal.normalize();
+    if (m_parent != NULL) {
+        point = m_parent->worldToObject(worldPoint);
+    }
+    return m_inverseTransform * point;
+}
+
+Tuple Shape::normalToWorld(const Tuple& localNormal) const {
+    Tuple normal {m_inverseTranspose * localNormal};
+    normal.setW(0.0);
+    normal = normal.normalize();
+    
+    if (m_parent != NULL) {
+        normal = m_parent->normalToWorld(normal);
+    }
+    return normal;
+
+}
+
+
+
+Tuple Shape::normalAt(const Tuple& worldPoint) const {
+    const Tuple localPoint{ worldToObject(worldPoint) };
+    const Tuple localNormal { localNormalAt(localPoint) };
+
+    return normalToWorld(localNormal);
 }
 
 bool operator==(const Shape& a, const Shape& b) {

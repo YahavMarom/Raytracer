@@ -14,6 +14,8 @@ public:
     std::vector<Intersection> localIntersect(const Ray& localRay) const override;
     Tuple localNormalAt(const Tuple& localPoint) const override;
 
+    Bounds bounds() const override;
+
     
 
 };
