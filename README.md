@@ -8,7 +8,7 @@ I built this to go past just implementing ray-object intersection math and actua
 
 The project also doubles as a small case study in multi-threading and spatial acceleration structures — see [Benchmarks](#benchmarks) below.
 
-![Rendered scene](assets/scene.png)
+![Rendered scene](scene.png)
 
 ## Built With
 
