@@ -14,9 +14,10 @@ Cone::Cone(const Color& c, double ambient, double diffuse, double specular, doub
 
 bool Cone::checkCap(const Ray& ray, double t) const{
     double x {ray.getPosition(t).getX()};
+    double y {ray.getPosition(t).getY()};
     double z {ray.getPosition(t).getZ()};
 
-    return (x * x + z * z <= 1.0);
+    return (x * x + z * z <= y * y);
 }
 
 void Cone::intersectCaps(const Ray& ray, std::vector<Intersection>& xs) const{
